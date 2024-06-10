@@ -19,10 +19,9 @@ class PlaylistGridItem extends StatelessWidget {
         );
       },
       child: Container(
-        padding: EdgeInsets.all(8),
         decoration: BoxDecoration(
           color: Colors.grey[800],
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(2),
         ),
         child: Row(
           children: [
@@ -41,13 +40,13 @@ class PlaylistGridItem extends StatelessWidget {
                 //   fit: BoxFit.cover,
                 // ),
                 ),
-            SizedBox(width: 8),
+            const SizedBox(width: 8),
             Expanded(
               child: Text(
                 playlist.title,
-                style: TextStyle(
+                style: const TextStyle(
                   color: Colors.white,
-                  fontSize: 16,
+                  fontSize: 14,
                 ),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,

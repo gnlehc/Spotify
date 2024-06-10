@@ -1,5 +1,5 @@
-import 'package:animation_demo/spotify/playlist_model.dart';
 import 'package:flutter/material.dart';
+import 'package:spotify/model/playlist_model.dart';
 
 class PlaylistDetailScreen extends StatelessWidget {
   final Playlist playlist;

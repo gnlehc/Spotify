@@ -1,10 +1,16 @@
-import 'package:animation_demo/spotify/playlist_model.dart';
 import 'package:flutter/material.dart';
-import 'widget/playlist_grid_item.dart';
-import 'widget/playlist_item.dart';
-import 'widget/section_header.dart';
+import 'package:spotify/model/playlist_model.dart';
+import 'package:spotify/pages/search_page.dart';
+import 'package:spotify/widgets/playlist_grid_item.dart';
+import 'package:spotify/widgets/playlist_item.dart';
+import 'package:spotify/widgets/section_header.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
+  @override
+  _HomeScreenState createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
   final List<Playlist> morningPlaylists = [
     Playlist(
       title: "Today's Top Hits",
@@ -63,6 +69,20 @@ class HomeScreen extends StatelessWidget {
       imageUrl: "lib/assets/4.png",
     ),
   ];
+  int _selectedIndex = 0;
+
+  void _onItemTapped(int index) {
+    if (index == 1) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => SearchScreen()),
+      );
+    } else {
+      setState(() {
+        _selectedIndex = index;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -83,70 +103,13 @@ class HomeScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            GridView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                childAspectRatio: 3.5,
-                mainAxisSpacing: 8,
-                crossAxisSpacing: 8,
-              ),
-              itemCount: morningPlaylists.length,
-              itemBuilder: (context, index) {
-                return PlaylistGridItem(playlist: morningPlaylists[index]);
-              },
-            ),
-            const SizedBox(height: 20),
-            SectionHeader(title: 'Made For You'),
-            const SizedBox(height: 10),
-            SizedBox(
-              height: 200,
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: madeForYou.asMap().entries.map((entry) {
-                    final index = entry.key;
-                    final playlist = entry.value;
-                    return Padding(
-                      padding: const EdgeInsets.all(2.0),
-                      child: PlaylistItem(playlist: playlist, index: index),
-                    );
-                  }).toList(),
-                ),
-              ),
-            ),
-            const SizedBox(height: 20),
-            SectionHeader(title: 'Popular playlists'),
-            const SizedBox(height: 10),
-            SizedBox(
-              height: 200,
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: popularPlaylists.asMap().entries.map((entry) {
-                    final index = entry.key;
-                    final playlist = entry.value;
-                    return Padding(
-                      padding: const EdgeInsets.all(2.0),
-                      child: PlaylistItem(playlist: playlist, index: index),
-                    );
-                  }).toList(),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
+      body: _getBodyWidget(),
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: const Color(0xff121212),
         unselectedItemColor: Colors.white70,
         selectedItemColor: Colors.white,
+        onTap: _onItemTapped,
+        currentIndex: _selectedIndex,
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
@@ -159,6 +122,69 @@ class HomeScreen extends StatelessWidget {
           BottomNavigationBarItem(
             icon: Icon(Icons.library_music),
             label: 'Your Library',
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _getBodyWidget() {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          GridView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              childAspectRatio: 3.5,
+              mainAxisSpacing: 8,
+              crossAxisSpacing: 8,
+            ),
+            itemCount: morningPlaylists.length,
+            itemBuilder: (context, index) {
+              return PlaylistGridItem(playlist: morningPlaylists[index]);
+            },
+          ),
+          const SizedBox(height: 20),
+          SectionHeader(title: 'Made For You'),
+          const SizedBox(height: 10),
+          SizedBox(
+            height: 200,
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: madeForYou.asMap().entries.map((entry) {
+                  final index = entry.key;
+                  final playlist = entry.value;
+                  return Padding(
+                    padding: const EdgeInsets.all(2.0),
+                    child: PlaylistItem(playlist: playlist, index: index),
+                  );
+                }).toList(),
+              ),
+            ),
+          ),
+          const SizedBox(height: 20),
+          SectionHeader(title: 'Popular playlists'),
+          const SizedBox(height: 10),
+          SizedBox(
+            height: 200,
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: popularPlaylists.asMap().entries.map((entry) {
+                  final index = entry.key;
+                  final playlist = entry.value;
+                  return Padding(
+                    padding: const EdgeInsets.all(2.0),
+                    child: PlaylistItem(playlist: playlist, index: index),
+                  );
+                }).toList(),
+              ),
+            ),
           ),
         ],
       ),
